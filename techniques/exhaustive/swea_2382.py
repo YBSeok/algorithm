@@ -4,37 +4,29 @@ dy=[0, -1, 1, 0, 0]
 dx=[0, 0, 0, -1, 1]
 opposite=[0, 2, 1, 4, 3]
 
-def remove(y, x, matrix):
-    matrix[y][x][0] = 0
-    matrix[y][x][1] = 0
-    matrix[y][x][2] = 0
+def crushBorder(y, x, next_matrix):
+    next_matrix[y][x][0] = int(next_matrix[y][x][0]/2)
+    next_matrix[y][x][1] = opposite[next_matrix[y][x][1]]
 
-def crushBorder(y, x, matrix):
-    matrix[y][x][0] = int(matrix[y][x][0]/2)
-    matrix[y][x][1] = opposite[matrix[y][x][1]]
-
-def move(y, x, matrix, width):
+def move(y, x, matrix, next_matrix, width):
     direction = matrix[y][x][1]
     ny = y + dy[direction]
     nx = x + dx[direction]
     if 0 <= ny and ny < width and 0 <= nx and nx < width:        
-        if matrix[ny][nx][0] == 0: # simple move
-            matrix[ny][nx][0] = matrix[y][x][0]
-            matrix[ny][nx][1] = matrix[y][x][1]
+        if next_matrix[ny][nx][0] == 0: # simple move
+            next_matrix[ny][nx][0] = matrix[y][x][0]
+            next_matrix[ny][nx][1] = matrix[y][x][1]
+            next_matrix[ny][nx][2] = matrix[y][x][0]
 
         else: # merge
-            matrix[ny][nx][0] += matrix[y][x][0]
-            if matrix[ny][nx][0] < matrix[y][x][0]:
-                matrix[ny][nx][1] = matrix[y][x][1]
+            next_matrix[ny][nx][0] += matrix[y][x][0]
+
+            if next_matrix[ny][nx][2] < matrix[y][x][0]:
+                next_matrix[ny][nx][1] = matrix[y][x][1]
+                next_matrix[ny][nx][2] = matrix[y][x][0]
 
         if ny == 0 or ny == width-1 or nx == 0 or nx == width-1:
-            crushBorder(ny, nx, matrix)
-
-        if matrix[ny][nx][0] == 0:
-            remove(ny, nx, matrix)
-
-        remove(y, x, matrix)
-
+            crushBorder(ny, nx, next_matrix)
     return
 
 for test_case in range(1, T + 1):
@@ -49,15 +41,14 @@ for test_case in range(1, T + 1):
 
     for i in range(m):
 
+        # 새로운 매트릭스에 저장, 마지막에 갈아낌
+        next_matrix = [[[0, 0, 0] for _ in range(n)] for _ in range(n)]
         for j in range(n):
             for k in range(n):
                 if matrix[j][k][0] != 0:
-                    matrix[j][k][2] = 1 # 이동 가능 거리 부여
-
-        for j in range(n):
-            for k in range(n):
-                if matrix[j][k][0] != 0 and matrix[j][k][2] == 1:
-                    move(j, k, matrix, n)
+                    move(j, k, matrix, next_matrix, n)
+                    
+        matrix = next_matrix
 
     result = 0
     for i in range(n):
