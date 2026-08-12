@@ -1,0 +1,1 @@
+{"name":"Local: swea_3000","url":"c:\\Users\\SSAFY\\Downloads\\Aug_2nd\\algorithm\\graph\\heap\\swea_3000.py","tests":[{"id":1786336579373,"input":"1\n3 5\n1 3\n2 6\n8 9","output":"#1 11"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\SSAFY\\Downloads\\Aug_2nd\\algorithm\\graph\\heap\\swea_3000.py","group":"local","local":true}
